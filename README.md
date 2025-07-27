@@ -1,52 +1,32 @@
-# User Management API - Made with Google Firebase
+# User Management API
 
-A REST API for managing users with automatic location data fetching from zip codes, powered by Firebase Realtime Database.
+A simple REST API for managing users with location data, using Firebase Realtime Database and OpenWeatherMap.
 
-## 📋 Requirements Met
+## Features
 
-1. ✅ **CRUD Endpoints** - Complete Create, Read, Update, Delete operations
-2. ✅ **Firebase Realtime Database** - NoSQL database integration
-3. ✅ **User Data** - `id`, `name`, `zipCode`, `latitude`, `longitude`, `timezone`
-4. ✅ **Location Integration** - Automatic fetching from OpenWeatherMap API
-5. ✅ **Update Logic** - Re-fetches location data when zip code changes
-6. ✅ **Frontend Ready** - Designed for ReactJS integration
+- CRUD endpoints for users
+- Stores users in Firebase Realtime Database
+- Fetches latitude, longitude, and timezone from OpenWeatherMap using zip code
+- Validates US zip codes
+- Endpoint for frontend to validate zip codes
 
-## 🚀 Quick Start
+## Quick Start
 
-```bash
-pnpm install
-pnpm run start:dev
-```
-
-API runs on: `http://localhost:3000`
-
-## 🔥 Firebase Setup
-
-1. **Create Firebase Project**:
-   - Go to [Firebase Console](https://console.firebase.google.com/)
-   - Create a new project
-   - Enable Realtime Database
-
-2. **Generate Service Account**:
-   - Go to Project Settings > Service Accounts
-   - Click "Generate new private key"
-   - Download the JSON file
-
-3. **Environment Variables**:
-   Create a `.env` file with:
-   ```env
-   FIREBASE_PROJECT_ID=your-project-id
-   FIREBASE_PRIVATE_KEY=your-private-key
-   FIREBASE_CLIENT_EMAIL=your-client-email
-   FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com
-   OPENWEATHER_API_KEY=7afa46f2e91768e7eeeb9001ce40de19
+1. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+2. Set up your `.env` file with Firebase and OpenWeatherMap credentials (see `.env.example`)
+3. Start the server:
+   ```bash
+   pnpm run start:dev
    ```
 
-## 📡 API Endpoints
+## Endpoints
 
 ### Create User
 
-**POST** `/users`
+`POST /users`
 
 ```json
 {
@@ -57,15 +37,15 @@ API runs on: `http://localhost:3000`
 
 ### Get All Users
 
-**GET** `/users`
+`GET /users`
 
 ### Get User by ID
 
-**GET** `/users/:id`
+`GET /users/:id`
 
 ### Update User
 
-**PATCH** `/users/:id`
+`PATCH /users/:id`
 
 ```json
 {
@@ -76,37 +56,33 @@ API runs on: `http://localhost:3000`
 
 ### Delete User
 
-**DELETE** `/users/:id`
+`DELETE /users/:id`
 
-## 🔧 Key Features
+### Validate Zip Code
 
-- **Firebase Integration**: Real-time database with automatic synchronization
-- **Automatic Location Fetching**: When creating/updating users, the API automatically fetches `latitude`, `longitude`, and `timezone` from the zip code using OpenWeatherMap API
-- **Smart Updates**: If zip code changes during update, location data is re-fetched
-- **Type Safety**: Full TypeScript implementation with DTOs
-- **Error Handling**: Proper HTTP status codes and error messages
+`GET /zipcodes/validate/:zipCode`
 
-## 🏗️ Project Structure
+- Returns `{ valid: true, latitude, longitude, timezone }` for valid US zip codes
+- Returns `{ valid: false, message }` for invalid or not found zip codes
+
+## Environment Variables
+
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_PRIVATE_KEY`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_DATABASE_URL`
+- `OPENWEATHER_API_KEY`
+
+## Example `.env`
 
 ```
-src/
-├── users/          # User CRUD operations
-├── weather/        # OpenWeatherMap API integration
-├── config/         # Firebase configuration
-└── main.ts         # Application entry point
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=your-service-account@your-project-id.iam.gserviceaccount.com
+FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com
+OPENWEATHER_API_KEY=your-openweathermap-api-key
 ```
 
-## 🎯 Creative Additions
+---
 
-- Firebase Realtime Database integration
-- Weather service integration for automatic location data
-- Comprehensive error handling
-- TypeScript DTOs for validation
-- Timestamp tracking (createdAt/updatedAt)
-
-## 🔮 Future Enhancements
-
-- User authentication with Firebase Auth
-- Real-time updates with Firebase listeners
-- Rate limiting
-- Swagger documentation
+That’s it! You now have a simple, full-stack-ready user management API with location validation.
