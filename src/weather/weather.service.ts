@@ -54,6 +54,33 @@ export class WeatherService {
     }
   }
 
+  async validateZipCode(zipCode: string): Promise<{
+    valid: boolean;
+    latitude?: number;
+    longitude?: number;
+    timezone?: string;
+    message?: string;
+  }> {
+    try {
+      const location = await this.getLocationData(zipCode);
+      return {
+        valid: true,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timezone: location.timezone,
+      };
+    } catch (error: unknown) {
+      let message = 'Invalid zip code';
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        message = String((error as { message?: unknown }).message);
+      }
+      return {
+        valid: false,
+        message,
+      };
+    }
+  }
+
   private getTimezoneOffset(timezoneOffset: number): string {
     // Convert timezone offset to timezone string
     const hours = Math.abs(timezoneOffset) / 3600;
