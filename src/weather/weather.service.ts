@@ -9,7 +9,8 @@ export interface LocationData {
 
 @Injectable()
 export class WeatherService {
-  private readonly apiKey = '7afa46f2e91768e7eeeb9001ce40de19';
+  private readonly apiKey =
+    process.env.OPENWEATHER_API_KEY || '7afa46f2e91768e7eeeb9001ce40de19';
   private readonly baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
   async getLocationData(zipCode: string): Promise<LocationData> {
