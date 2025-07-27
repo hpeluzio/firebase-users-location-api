@@ -2,6 +2,19 @@
 
 A simple REST API for managing users with location data, using Firebase Realtime Database and OpenWeatherMap.
 
+## Prerequisites
+
+- **Node.js** v22.17.1
+- **pnpm** (used as the package manager for this project)
+
+> **Note:**
+> This project uses [pnpm](https://pnpm.io/) for dependency management.
+> If you don’t have pnpm installed, you can install it globally with:
+>
+> ```bash
+> npm install -g pnpm
+> ```
+
 ## Features
 
 - CRUD endpoints for users
