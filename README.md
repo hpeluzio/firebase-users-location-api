@@ -23,60 +23,171 @@ A simple REST API for managing users with location data, using Firebase Realtime
 - Validates US zip codes
 - Endpoint for frontend to validate zip codes
 
-## Quick Start
+## API Endpoints
 
-1. Install dependencies:
-   ```bash
-   pnpm install
+1. **Create User**  
+   `POST /users`  
+   Create a new user with name and zip code.
+
+   **Request Example:**
+
+   ```json
+   {
+     "name": "John Doe",
+     "zipCode": "10001"
+   }
    ```
-2. Set up your `.env` file with Firebase and OpenWeatherMap credentials (see `.env.example`)
-3. Start the server:
-   ```bash
-   pnpm run start:dev
+
+   **Response Example:**
+
+   ```json
+   {
+     "id": "abc123def",
+     "name": "John Doe",
+     "zipCode": "10001",
+     "latitude": 40.7505,
+     "longitude": -73.9934,
+     "timezone": "America/New_York",
+     "createdAt": "2024-01-15T10:30:00.000Z",
+     "updatedAt": "2024-01-15T10:30:00.000Z"
+   }
    ```
 
-## Endpoints
+   **Curl:**
 
-### Create User
+   ```bash
+   curl -X POST http://localhost:3000/users \
+     -H "Content-Type: application/json" \
+     -d '{"name": "John Doe", "zipCode": "10001"}'
+   ```
 
-`POST /users`
+2. **Get All Users**  
+   `GET /users`  
+   Retrieve a list of all users.
 
-```json
-{
-  "name": "John Doe",
-  "zipCode": "10001"
-}
-```
+   **Response Example:**
 
-### Get All Users
+   ```json
+   [
+     {
+       "id": "abc123def",
+       "name": "John Doe",
+       "zipCode": "10001",
+       "latitude": 40.7505,
+       "longitude": -73.9934,
+       "timezone": "America/New_York",
+       "createdAt": "2024-01-15T10:30:00.000Z",
+       "updatedAt": "2024-01-15T10:30:00.000Z"
+     }
+   ]
+   ```
 
-`GET /users`
+   **Curl:**
 
-### Get User by ID
+   ```bash
+   curl http://localhost:3000/users
+   ```
 
-`GET /users/:id`
+3. **Get User by ID**  
+   `GET /users/:id`  
+   Retrieve a single user by their unique ID.
 
-### Update User
+   **Response Example:**
 
-`PATCH /users/:id`
+   ```json
+   {
+     "id": "abc123def",
+     "name": "John Doe",
+     "zipCode": "10001",
+     "latitude": 40.7505,
+     "longitude": -73.9934,
+     "timezone": "America/New_York",
+     "createdAt": "2024-01-15T10:30:00.000Z",
+     "updatedAt": "2024-01-15T10:30:00.000Z"
+   }
+   ```
 
-```json
-{
-  "name": "Jane Doe",
-  "zipCode": "90210"
-}
-```
+   **Curl:**
 
-### Delete User
+   ```bash
+   curl http://localhost:3000/users/abc123def
+   ```
 
-`DELETE /users/:id`
+4. **Update User**  
+   `PATCH /users/:id`  
+   Update a user's name and/or zip code.
 
-### Validate Zip Code
+   **Request Example:**
 
-`GET /zipcodes/validate/:zipCode`
+   ```json
+   {
+     "name": "Jane Doe",
+     "zipCode": "90210"
+   }
+   ```
 
-- Returns `{ valid: true, latitude, longitude, timezone }` for valid US zip codes
-- Returns `{ valid: false, message }` for invalid or not found zip codes
+   **Response Example:**
+
+   ```json
+   {
+     "id": "abc123def",
+     "name": "Jane Doe",
+     "zipCode": "90210",
+     "latitude": 34.0901,
+     "longitude": -118.4065,
+     "timezone": "America/Los_Angeles",
+     "createdAt": "2024-01-15T10:30:00.000Z",
+     "updatedAt": "2024-01-15T11:45:00.000Z"
+   }
+   ```
+
+   **Curl:**
+
+   ```bash
+   curl -X PATCH http://localhost:3000/users/abc123def \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Jane Doe", "zipCode": "90210"}'
+   ```
+
+5. **Delete User**  
+   `DELETE /users/:id`  
+   Delete a user by their unique ID.
+
+   **Curl:**
+
+   ```bash
+   curl -X DELETE http://localhost:3000/users/abc123def
+   ```
+
+6. **Validate Zip Code**  
+   `GET /zipcodes/validate/:zipCode`  
+   Check if a zip code is valid and get its location data.
+
+   **Valid Response Example:**
+
+   ```json
+   {
+     "valid": true,
+     "latitude": 40.7505,
+     "longitude": -73.9934,
+     "timezone": "America/New_York"
+   }
+   ```
+
+   **Invalid Response Example:**
+
+   ```json
+   {
+     "valid": false,
+     "message": "Zip code \"99999\" not found. Please enter a valid US zip code."
+   }
+   ```
+
+   **Curl:**
+
+   ```bash
+   curl http://localhost:3000/zipcodes/validate/10001
+   ```
 
 ## Environment Variables
 
