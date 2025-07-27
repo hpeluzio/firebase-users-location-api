@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'Welcome to the RentRedi interview! 🏠';
+    return 'Welcome to the RentRedi API! 🏠';
   }
 }

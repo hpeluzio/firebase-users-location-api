@@ -31,9 +31,24 @@ export class WeatherService {
         longitude: coord.lon,
         timezone: this.getTimezoneOffset(timezone),
       };
-    } catch {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          throw new HttpException(
+            `Zip code "${zipCode}" not found. Please enter a valid US zip code.`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+        if (error.response?.status === 401) {
+          throw new HttpException(
+            'Weather service authentication failed. Please contact support.',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+
       throw new HttpException(
-        `Failed to fetch location data for zip code: ${zipCode}`,
+        `Failed to fetch location data for zip code "${zipCode}". Please try again or contact support.`,
         HttpStatus.BAD_REQUEST,
       );
     }
