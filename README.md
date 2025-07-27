@@ -1,27 +1,55 @@
 # User Management API
 
-A simple REST API for managing users with location data, using Firebase Realtime Database and OpenWeatherMap.
+A modern REST API built with NestJS that manages users with automatic location data fetching. When you create or update a user with just their name and zip code, the API automatically retrieves their latitude, longitude, and timezone from OpenWeatherMap.
 
-## Prerequisites
+## Features
+
+- **Full CRUD for users** (create, read, update, delete)
+- **Firebase Realtime Database** integration
+- **Automatic location fetching** from zip codes using OpenWeatherMap
+- **Zip code validation** with dedicated endpoint
+- **TypeScript** with full type safety
+- **Comprehensive error handling** and validation
+
+## Getting Started
+
+### Prerequisites
 
 - **Node.js** v22.17.1
 - **pnpm** (used as the package manager for this project)
 
 > **Note:**
 > This project uses [pnpm](https://pnpm.io/) for dependency management.
-> If you don’t have pnpm installed, you can install it globally with:
+> If you don't have pnpm installed, you can install it globally with:
 >
 > ```bash
 > npm install -g pnpm
 > ```
 
-## Features
+### Setup
 
-- CRUD endpoints for users
-- Stores users in Firebase Realtime Database
-- Fetches latitude, longitude, and timezone from OpenWeatherMap using zip code
-- Validates US zip codes
-- Endpoint for frontend to validate zip codes
+1. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+2. **Set up your `.env` file with Firebase and OpenWeatherMap credentials:**
+
+   ```
+   FIREBASE_PROJECT_ID=your-project-id
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+   FIREBASE_CLIENT_EMAIL=your-service-account@your-project-id.iam.gserviceaccount.com
+   FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com
+   OPENWEATHER_API_KEY=your-openweathermap-api-key
+   ```
+
+3. **Start the development server:**
+   ```bash
+   pnpm run start:dev
+   ```
+
+The API will be available at `http://localhost:3000`.
 
 ## API Endpoints
 
@@ -189,24 +217,26 @@ A simple REST API for managing users with location data, using Firebase Realtime
    curl http://localhost:3000/zipcodes/validate/10001
    ```
 
+## Project Structure
+
+```
+src/
+├── users/          # User CRUD operations
+├── weather/        # OpenWeatherMap API integration
+├── config/         # Firebase configuration
+└── main.ts         # Application entry point
+```
+
 ## Environment Variables
 
-- `FIREBASE_PROJECT_ID`
-- `FIREBASE_PRIVATE_KEY`
-- `FIREBASE_CLIENT_EMAIL`
-- `FIREBASE_DATABASE_URL`
-- `OPENWEATHER_API_KEY`
+- `FIREBASE_PROJECT_ID` - Your Firebase project ID
+- `FIREBASE_PRIVATE_KEY` - Firebase service account private key
+- `FIREBASE_CLIENT_EMAIL` - Firebase service account email
+- `FIREBASE_DATABASE_URL` - Firebase Realtime Database URL
+- `OPENWEATHER_API_KEY` - OpenWeatherMap API key for location data
 
-## Example `.env`
+## Customization
 
-```
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-FIREBASE_CLIENT_EMAIL=your-service-account@your-project-id.iam.gserviceaccount.com
-FIREBASE_DATABASE_URL=https://your-project-id-default-rtdb.firebaseio.com
-OPENWEATHER_API_KEY=your-openweathermap-api-key
-```
-
----
-
-That’s it! You now have a simple, full-stack-ready user management API with location validation.
+**Database:** Uses Firebase Realtime Database, easily switchable to other databases.
+**Location Service:** Powered by OpenWeatherMap API, can be extended for other providers.
+**Validation:** Custom zip code validation with regex patterns for US format.
