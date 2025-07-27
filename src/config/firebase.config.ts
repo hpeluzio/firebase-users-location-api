@@ -1,7 +1,12 @@
 import { initializeApp, cert } from 'firebase-admin/app';
-import { getDatabase } from 'firebase-admin/database';
+import { getDatabase, Database } from 'firebase-admin/database';
 
-let database: any;
+// Define mock database type for tests
+type MockDatabase = {
+  ref: jest.Mock;
+};
+
+let database: Database | MockDatabase;
 let app: any;
 
 // Skip Firebase initialization during tests

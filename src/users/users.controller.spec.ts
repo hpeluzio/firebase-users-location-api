@@ -8,7 +8,6 @@ import { NotFoundException } from '@nestjs/common';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
-  let usersService: UsersService;
 
   const mockWeatherService = {
     getLocationData: jest.fn(),
@@ -39,8 +38,6 @@ describe('UsersController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    usersService = moduleFixture.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
@@ -85,9 +82,11 @@ describe('UsersController (e2e)', () => {
         longitude: -73.9934,
         timezone: 'America/New_York',
       });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.createdAt).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.updatedAt).toBeDefined();
-      expect(usersService.create).toHaveBeenCalledWith(createUserDto);
+      expect(mockUsersService.create).toHaveBeenCalledWith(createUserDto);
     });
 
     it('should return 400 for invalid data', async () => {
@@ -126,6 +125,7 @@ describe('UsersController (e2e)', () => {
 
       // Check that the response contains the expected fields
       expect(response.body).toHaveLength(1);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body[0]).toMatchObject({
         id: 'abc123',
         name: 'John Doe',
@@ -134,9 +134,11 @@ describe('UsersController (e2e)', () => {
         longitude: -73.9934,
         timezone: 'America/New_York',
       });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body[0].createdAt).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body[0].updatedAt).toBeDefined();
-      expect(usersService.findAll).toHaveBeenCalled();
+      expect(mockUsersService.findAll).toHaveBeenCalled();
     });
   });
 
@@ -168,9 +170,11 @@ describe('UsersController (e2e)', () => {
         longitude: -73.9934,
         timezone: 'America/New_York',
       });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.createdAt).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.updatedAt).toBeDefined();
-      expect(usersService.findOne).toHaveBeenCalledWith('abc123');
+      expect(mockUsersService.findOne).toHaveBeenCalledWith('abc123');
     });
 
     it('should return 404 for non-existent user', async () => {
@@ -216,9 +220,14 @@ describe('UsersController (e2e)', () => {
         longitude: -118.4065,
         timezone: 'America/Los_Angeles',
       });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.createdAt).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.updatedAt).toBeDefined();
-      expect(usersService.update).toHaveBeenCalledWith('abc123', updateUserDto);
+      expect(mockUsersService.update).toHaveBeenCalledWith(
+        'abc123',
+        updateUserDto,
+      );
     });
 
     it('should return 404 for non-existent user', async () => {
@@ -243,7 +252,7 @@ describe('UsersController (e2e)', () => {
 
       await request(app.getHttpServer()).delete('/users/abc123').expect(200);
 
-      expect(usersService.remove).toHaveBeenCalledWith('abc123');
+      expect(mockUsersService.remove).toHaveBeenCalledWith('abc123');
     });
 
     it('should return 404 for non-existent user', async () => {

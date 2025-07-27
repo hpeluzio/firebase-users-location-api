@@ -4,10 +4,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { WeatherService } from '../weather/weather.service';
 import { database } from '../config/firebase.config';
+import { Reference } from 'firebase-admin/database';
 
 @Injectable()
 export class UsersService {
-  private readonly usersRef = database.ref('users');
+  private readonly usersRef: Reference = database.ref('users') as Reference;
 
   constructor(private readonly weatherService: WeatherService) {}
 

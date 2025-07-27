@@ -7,11 +7,13 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 // Mock axios.isAxiosError
 jest.spyOn(axios, 'isAxiosError').mockImplementation((error: any) => {
-  return error && error.isAxiosError === true;
+  if (!error || typeof error !== 'object') return false;
+  return Boolean((error as { isAxiosError?: boolean }).isAxiosError);
 });
 
 describe('WeatherService', () => {
   let service: WeatherService;
+  let mockAxiosGet: jest.Mock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +21,8 @@ describe('WeatherService', () => {
     }).compile();
 
     service = module.get<WeatherService>(WeatherService);
+    mockAxiosGet = jest.fn();
+    (mockedAxios.get as jest.Mock) = mockAxiosGet;
   });
 
   afterEach(() => {
@@ -37,7 +41,7 @@ describe('WeatherService', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await service.getLocationData('10001');
 
@@ -47,7 +51,7 @@ describe('WeatherService', () => {
         timezone: 'UTC-05:00',
       });
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(
+      expect(mockAxiosGet).toHaveBeenCalledWith(
         'https://api.openweathermap.org/data/2.5/weather',
         {
           params: {
@@ -69,7 +73,7 @@ describe('WeatherService', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await service.getLocationData('90210');
 
@@ -88,7 +92,7 @@ describe('WeatherService', () => {
         },
       };
 
-      mockedAxios.get.mockRejectedValue(mockError);
+      mockAxiosGet.mockRejectedValue(mockError);
 
       await expect(service.getLocationData('99999')).rejects.toThrow(
         'Zip code "99999" not found. Please enter a valid US zip code.',
@@ -104,7 +108,7 @@ describe('WeatherService', () => {
         message: 'Request failed with status code 401',
       };
 
-      mockedAxios.get.mockRejectedValue(mockError);
+      mockAxiosGet.mockRejectedValue(mockError);
 
       await expect(service.getLocationData('10001')).rejects.toThrow(
         'Weather service authentication failed. Please contact support.',
@@ -114,7 +118,7 @@ describe('WeatherService', () => {
     it('should throw generic error for other failures', async () => {
       const mockError = new Error('Network error');
 
-      mockedAxios.get.mockRejectedValue(mockError);
+      mockAxiosGet.mockRejectedValue(mockError);
 
       await expect(service.getLocationData('10001')).rejects.toThrow(
         'Failed to fetch location data for zip code "10001". Please try again or contact support.',
@@ -134,7 +138,7 @@ describe('WeatherService', () => {
         },
       };
 
-      mockedAxios.get.mockResolvedValue(mockResponse);
+      mockAxiosGet.mockResolvedValue(mockResponse);
 
       const result = await service.validateZipCode('10001');
 
@@ -156,7 +160,7 @@ describe('WeatherService', () => {
           'Zip code "99999" not found. Please enter a valid US zip code.',
       };
 
-      mockedAxios.get.mockRejectedValue(mockError);
+      mockAxiosGet.mockRejectedValue(mockError);
 
       const result = await service.validateZipCode('99999');
 
@@ -170,7 +174,7 @@ describe('WeatherService', () => {
     it('should return generic error message for unknown errors', async () => {
       const mockError = new Error('Network error');
 
-      mockedAxios.get.mockRejectedValue(mockError);
+      mockAxiosGet.mockRejectedValue(mockError);
 
       const result = await service.validateZipCode('10001');
 

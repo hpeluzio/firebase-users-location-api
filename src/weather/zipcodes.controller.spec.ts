@@ -6,7 +6,6 @@ import { WeatherService } from './weather.service';
 
 describe('ZipcodesController (e2e)', () => {
   let app: INestApplication;
-  let weatherService: WeatherService;
 
   const mockWeatherService = {
     validateZipCode: jest.fn(),
@@ -25,8 +24,6 @@ describe('ZipcodesController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    weatherService = moduleFixture.get<WeatherService>(WeatherService);
   });
 
   afterEach(() => {
@@ -55,7 +52,7 @@ describe('ZipcodesController (e2e)', () => {
         .expect(200);
 
       expect(response.body).toEqual(mockValidationResult);
-      expect(weatherService.validateZipCode).toHaveBeenCalledWith('10001');
+      expect(mockWeatherService.validateZipCode).toHaveBeenCalledWith('10001');
     });
 
     it('should return invalid result for invalid zip code', async () => {
@@ -74,7 +71,7 @@ describe('ZipcodesController (e2e)', () => {
         .expect(200);
 
       expect(response.body).toEqual(mockValidationResult);
-      expect(weatherService.validateZipCode).toHaveBeenCalledWith('99999');
+      expect(mockWeatherService.validateZipCode).toHaveBeenCalledWith('99999');
     });
 
     it('should handle service errors gracefully', async () => {

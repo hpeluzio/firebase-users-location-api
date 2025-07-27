@@ -5,7 +5,6 @@ import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let weatherService: WeatherService;
 
   const mockWeatherService = {
     getLocationData: jest.fn(),
@@ -23,7 +22,6 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    weatherService = module.get<WeatherService>(WeatherService);
   });
 
   afterEach(() => {
@@ -57,7 +55,7 @@ describe('UsersService', () => {
       expect(result.id).toBeDefined();
       expect(result.createdAt).toBeInstanceOf(Date);
       expect(result.updatedAt).toBeInstanceOf(Date);
-      expect(weatherService.getLocationData).toHaveBeenCalledWith('10001');
+      expect(mockWeatherService.getLocationData).toHaveBeenCalledWith('10001');
     });
 
     it('should throw error when weather service fails', async () => {
@@ -104,7 +102,7 @@ describe('UsersService', () => {
         name: 'Jane Doe',
         zipCode: '10001',
       });
-      expect(weatherService.getLocationData).not.toHaveBeenCalled();
+      expect(mockWeatherService.getLocationData).not.toHaveBeenCalled();
     });
 
     it('should update user zip code and re-fetch location data', async () => {
@@ -143,7 +141,7 @@ describe('UsersService', () => {
         longitude: -118.4065,
         timezone: 'America/Los_Angeles',
       });
-      expect(weatherService.getLocationData).toHaveBeenCalledWith('90210');
+      expect(mockWeatherService.getLocationData).toHaveBeenCalledWith('90210');
     });
 
     it('should throw NotFoundException for non-existent user', async () => {

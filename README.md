@@ -227,6 +227,32 @@ src/
 └── main.ts         # Application entry point
 ```
 
+## Testing
+
+This project includes a comprehensive test suite with **46 tests** covering all aspects of the application.
+
+### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:cov
+
+# Run specific test file
+pnpm test src/users/users.service.spec.ts
+```
+
+### Test Coverage
+
+- **Unit Tests**: Service logic, DTO validation, controller handling
+- **Integration Tests**: E2E API testing with HTTP requests
+- **Mocking**: External dependencies (Firebase, OpenWeatherMap) are mocked for reliable testing
+
 ## Environment Variables
 
 - `FIREBASE_PROJECT_ID` - Your Firebase project ID
